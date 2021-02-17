@@ -1,0 +1,125 @@
+﻿@using LPFO_one.Domain
+@model IEnumerable<LPFO_one.Domain.Note>
+@{
+
+    ViewData["Title"] = "лаборатория психо-физического обеспечения";
+}
+
+@*центрирование первых двух блоков страницы, их текста и картинок*@
+<div class="container warning">
+    <div class="row">
+        <div class="col-2">
+            <div class="row">
+                <div class="col"> </div>
+                <div class="w-100"></div>
+                <div class="col"> </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <img class="w-auto h-50 rounded mx-5" src="~/img/info.png" />
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <h5 class="align-text-bottom p-5 "> Возможность подать, заявку закрывается в 00:00 начала дня </h5>
+        </div>
+    </div>
+</div>
+
+<div class="container curretly_day">
+    <div class="row">
+        <div class="col-2">
+            <div class="row">
+                <div class="col"> </div>
+                <div class="w-100"></div>
+                <div class="col"> </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <img class="w-auto h-50 rounded mx-5" src="~/img/calendar.png" />
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <h5 class="align-text-bottom p-5 w-auto">
+                Список записей на @ViewData["date"]
+            </h5>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<form method="post">
+    <input type="date" value="@ViewData["date"]" name="DateSlots" />
+
+    <input type="submit" value="выбрать день" />
+
+    @if (Model.Count() <= 7 && ViewBag.boolButton == true)
+    {
+        <input asp-controller="Home" asp-action="GoCreate" type="submit" value="Записаться" />
+    }
+    <div class="float-right">
+        <input asp-controller="Home" asp-action="ExportExcelDay" type="submit" value="Экспорт в Excel(день)" />
+
+        <input asp-controller="Home" asp-action="ExportExcelAll" type="submit" value="Экспорт в Excel(все)" />
+    </div>
+
+</form>
+
+
+
+
+@if (ViewBag.boolButton == false)
+{
+
+    <h4 class="text-center" style="color:orangered">@ViewData["MessageDay"]</h4>
+
+}
+else if (Model.Count() == 8)
+{
+    <h4 class="text-center" style="color:orangered">Запись на данный день закончена!</h4>
+}
+
+<div class="text-center">
+    <table class="table">
+        <thead class="table_head">
+            <tr>
+                <th scope="col">№</th>
+                <th scope="col">Ф.И.О</th>
+                <th scope="col">Спеиалист</th>
+                <th scope="col">Процедуры</th>
+                <th scope="col">Дата</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 0;
+
+            }
+
+            @foreach (var note in Model)
+            {
+                i++;
+                <tr>
+                    <th scope="row">@i</th>
+                    <td>@note.Users.Name</td>
+                    <td>@note.Spec.Name</td>
+                    <td class="text-left">
+
+                        @foreach (Services service in note.Services)
+                        {
+
+                            <li>@service.Name</li>
+
+                        }
+
+                    </td>
+                    <td>@note.Date</td>
+                </tr>
+
+
+            }
+        </tbody>
+    </table>
+</div>

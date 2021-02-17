@@ -1,0 +1,69 @@
+﻿@using LPFO_one.Domain
+@model LPFO_one.Models.NoteViewModel
+
+@{
+    ViewData["Title"] = "Создание заявки";
+}
+@* ViewData для ошибки какого либо поля *@
+@if (ViewData["error"] != null)
+{
+    <h4>@ViewData["error"]</h4>
+}
+
+
+<form method="post" asp-controller="Create" asp-action="CreateNote">
+   
+    <div asp-validation-summary="All"></div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col"><label asp-for="users.Phone_num"></label></th>
+                <th scope="col"><input asp-for="users.Phone_num" /></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row"><label asp-for="users.Name"></label></th>
+                <td><input asp-for="users.Name" /></td>
+
+            </tr>
+            <tr>
+                <th scope="row"><label>Отдел</label></th>
+                <td><select asp-for="unit.ID_unit" asp-items="@(new SelectList(ViewBag.unitBag,"ID_unit","Name"))"></select></td>
+            </tr>
+            <tr>
+                <th scope="row"><label asp-for="users.Post"></label></th>
+                <td><input asp-for="users.Post" /></td>
+
+            </tr>
+            <tr>
+                <th scope="row">Специалист</th>
+                <td><select asp-for="spec.ID_spec" asp-items="@(new SelectList(ViewBag.specBag,"ID_spec","Name"))"></select></td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <label>Выберите процедуру</label>
+                    <br />
+                    <label>Для множественного выбора зажмите "Ctrl"</label>
+
+                </th>
+                <td>@Html.ListBox("ID_service", (MultiSelectList)ViewBag.serviceBag, new { size = 8 })</td>
+            </tr>
+            <tr>
+                <th scope="row"> <label>Дата </label> <input asp-for="note.Date" readonly type="date" value="@String.Format("{0:yyyy-MM-dd}", ViewBag.DateTime)" /></th>
+                <td><label>Время </label> @Html.DropDownList("timeSet", new SelectList(new int[] { 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 })) : 00</td>
+            </tr>
+            <tr>
+                <th scope="row">  <input type="submit" value="Готово" /></th>
+                
+            </tr>
+
+        </tbody>
+    </table>
+
+
+
+
+</form>
+
